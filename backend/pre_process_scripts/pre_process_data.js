@@ -1,5 +1,6 @@
 var mysql = require("mysql");
-var synonyms = require("node-synonyms");
+//Only run one time, used to provide original json data for compare.py
+//var synonyms = require("node-synonyms");
 var fs = require("fs");
 
 var mysqlServerConfig = {
