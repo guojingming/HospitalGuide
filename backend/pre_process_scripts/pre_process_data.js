@@ -29,6 +29,7 @@ function writeProcessedDataToDatabase(){
         var rowsNumber = 0;
         for(var diseaseIndex in data.disease){
             var diseaseName = data.disease[diseaseIndex]['disease_name'];
+            //console.log(diseaseName);
             diseaseTable.push({'disease_id':rowsNumber, 'disease_name':diseaseName});
             diseaseDescriptionTable.push({
                 'disease_id':rowsNumber,
@@ -42,6 +43,7 @@ function writeProcessedDataToDatabase(){
                 "disease_cost":data.disease[diseaseIndex]['disease_cost'],
                 "disease_complication":data.disease[diseaseIndex]['disease_complication']
             });
+            rowsNumber++;
         }
         rowsNumber = 0;
         for(var symptom in data.symptoms){
@@ -63,35 +65,35 @@ function writeProcessedDataToDatabase(){
             }
         });
 
-        // async.eachSeries(diseaseDescriptionTable, function(disease, errCb){
-        //     serverConnection.query("insert into disease values (?,?,?,?,?,?,?,?,?,?)", [disease.disease_id, disease.disease_nickname, disease.disease_description, disease.disease_department, disease.disease_age, disease.disease_location, disease.disease_infectious, disease.disease_group, disease.disease_cost, disease.disease_complication], function(err, res){
-        //         errCb();
-        //     });
-        // }, function(err){
-        //     if(err){
-        //         throw err;
-        //     }
-        // });
+        async.eachSeries(diseaseDescriptionTable, function(diseaseDescription, errCb){
+            serverConnection.query("insert into disease values (?,?,?,?,?,?,?,?,?,?)", [diseaseDescription.disease_id, diseaseDescription.disease_nickname, diseaseDescription.disease_description, diseaseDescription.disease_department, diseaseDescription.disease_age, diseaseDescription.disease_location, diseaseDescription.disease_infectious, diseaseDescription.disease_group, diseaseDescription.disease_cost, diseaseDescription.disease_complication], function(err, res){
+                errCb();
+            });
+        }, function(err){
+            if(err){
+                throw err;
+            }
+        });
 
-        // async.eachSeries(diseaseSymptomTable, function(disease, errCb){
-        //     serverConnection.query("insert into disease values (?,?)", [disease.disease_id, disease.symptom_id], function(err, res){
-        //         errCb();
-        //     });
-        // }, function(err){
-        //     if(err){
-        //         throw err;
-        //     }
-        // });
+        async.eachSeries(diseaseSymptomTable, function(diseaseSymptom, errCb){
+            serverConnection.query("insert into disease values (?,?)", [diseaseSymptom.disease_id, diseaseSymptom.symptom_id], function(err, res){
+                errCb();
+            });
+        }, function(err){
+            if(err){
+                throw err;
+            }
+        });
 
-        // async.eachSeries(symptomTable, function(disease, errCb){
-        //     serverConnection.query("insert into disease values (?,?)", [disease.symptom_id, disease.symptom_name], function(err, res){
-        //         errCb();
-        //     });
-        // }, function(err){
-        //     if(err){
-        //         throw err;
-        //     }
-        // });
+        async.eachSeries(symptomTable, function(symptom, errCb){
+            serverConnection.query("insert into disease values (?,?)", [symptom.symptom_id, symptom.symptom_name], function(err, res){
+                errCb();
+            });
+        }, function(err){
+            if(err){
+                throw err;
+            }
+        });
         
     });
 }
