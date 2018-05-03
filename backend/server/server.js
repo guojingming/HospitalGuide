@@ -1,7 +1,27 @@
-var http = require('http');
-var url = require('url');
+var express = require('express');
+var app = express();
+var mysql = require('mysql');
 
 var predicter = require('../algorithm/predict');
+
+var mysqlServerConfig = {
+    host:'45.78.41.228',
+    user: 'root',
+    password: '1234',
+    database: 'medical',
+    useConnectionPooling: true
+};
+
+var serverConnection = mysql.createConnection(mysqlServerConfig);
+
+var result = "";
+
+serverConnection.connect(function(err) {
+    if (err) {
+        console.error('error connecting: ' + err.stack);
+        throw err;
+    }
+});
 
 //设置主机名
 var hostName = '127.0.0.1';
@@ -9,27 +29,19 @@ var hostName = '127.0.0.1';
 var port = 8932;
 //var port = 80;
 //创建服务
-var server = http.createServer(function(req,res){
-    res.writeHeader(200, {'Content-Type':'text/javascript;charset=UTF-8'});  //状态码+响应头属性
 
-    // 解析 url 参数
-    var params = url.parse(req.url, true).query;  //parse将字符串转成对象,req.url="/?url=123&name=321"，true表示params是{url:"123",name:"321"}，false表示params是url=123&name=321
-    var description = params.predict;
-    predicter.predictDisease(description, function(disease){
-        res.write('疾病名：');
-        res.write(disease['disease_name'] + "\n");
-        res.write('疾病别名：');
-        res.write(disease['disease_nickname'] + "\n");
-        res.write('疾病描述：');
-        res.write(disease['disease_description'] + "\n");
-        res.write('挂号科室：');
-        res.write(disease['disease_department'] + "\n");
-        res.end();
+app.get('/', function(request, response) {
+    var params = request.query.query;
+    predicter.predictDisease(serverConnection, params, function(disease){
+        var str = "<p>疾病名称:" + disease.disease_name + "</p><p>疾病描述:" + disease.disease_description + "</p><p>传染性:" + disease.disease_infectious + "</p><p>挂号科室:" + disease.disease_department + "</p><p>治疗费用" + disease.disease_cost + "</p>";
+
+        response.send(str);
     });
-
-    
 });
-
-server.listen(port,hostName,function(){
-    console.log('服务器运行在http:' + hostName + ':' + port);
+app.get('/predict', function(request, response) {
+    response.send("Welcome");
 });
+app.get("*", function(request, response) {
+    response.send("404 error!");
+});
+app.listen(port);
