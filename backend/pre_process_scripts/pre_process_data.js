@@ -56,6 +56,7 @@ function writeProcessedDataToDatabase(){
 
         //write to database
         async.eachSeries(diseaseTable, function(disease, errCb){
+            console.log(disease.disease_name);
             serverConnection.query("insert into disease values (?,?)", [disease.disease_id, disease.disease_name], function(err, res){
                 errCb();
             });
@@ -66,7 +67,7 @@ function writeProcessedDataToDatabase(){
         });
 
         async.eachSeries(diseaseDescriptionTable, function(diseaseDescription, errCb){
-            serverConnection.query("insert into disease values (?,?,?,?,?,?,?,?,?,?)", [diseaseDescription.disease_id, diseaseDescription.disease_nickname, diseaseDescription.disease_description, diseaseDescription.disease_department, diseaseDescription.disease_age, diseaseDescription.disease_location, diseaseDescription.disease_infectious, diseaseDescription.disease_group, diseaseDescription.disease_cost, diseaseDescription.disease_complication], function(err, res){
+            serverConnection.query("insert into disease_description values (?,?,?,?,?,?,?,?,?,?)", [diseaseDescription.disease_id, diseaseDescription.disease_nickname, diseaseDescription.disease_description, diseaseDescription.disease_department, diseaseDescription.disease_age, diseaseDescription.disease_location, diseaseDescription.disease_infectious, diseaseDescription.disease_group, diseaseDescription.disease_cost, diseaseDescription.disease_complication], function(err, res){
                 errCb();
             });
         }, function(err){
@@ -76,7 +77,7 @@ function writeProcessedDataToDatabase(){
         });
 
         async.eachSeries(diseaseSymptomTable, function(diseaseSymptom, errCb){
-            serverConnection.query("insert into disease values (?,?)", [diseaseSymptom.disease_id, diseaseSymptom.symptom_id], function(err, res){
+            serverConnection.query("insert into disease_symptom values (?,?)", [diseaseSymptom.disease_id, diseaseSymptom.symptom_id], function(err, res){
                 errCb();
             });
         }, function(err){
@@ -86,7 +87,7 @@ function writeProcessedDataToDatabase(){
         });
 
         async.eachSeries(symptomTable, function(symptom, errCb){
-            serverConnection.query("insert into disease values (?,?)", [symptom.symptom_id, symptom.symptom_name], function(err, res){
+            serverConnection.query("insert into symptom values (?,?)", [symptom.symptom_id, symptom.symptom_name], function(err, res){
                 errCb();
             });
         }, function(err){
