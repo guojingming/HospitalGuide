@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var mysql = require('mysql');
+var path = require('path');
 
 var predicter = require('../algorithm/predict');
 
@@ -31,15 +32,19 @@ var port = 8932;
 //创建服务
 
 app.get('/', function(request, response) {
-    var params = request.query.query;
+    var fatherPath = path.resolve(__dirname, "..");
+    response.sendFile(fatherPath + "/view/index.html"); 
+});
+app.get('/predict', function(request, response) {
+    var params = request.query.symptoms;
     predicter.predictDisease(serverConnection, params, function(disease){
         var str = "<p>疾病名称:" + disease.disease_name + "</p><p>疾病描述:" + disease.disease_description + "</p><p>传染性:" + disease.disease_infectious + "</p><p>挂号科室:" + disease.disease_department + "</p><p>治疗费用" + disease.disease_cost + "</p>";
-
         response.send(str);
     });
 });
-app.get('/predict', function(request, response) {
-    response.send("Welcome");
+app.get("/return", function(request, response) {
+    var fatherPath = path.resolve(__dirname, "..");
+    response.sendFile(fatherPath + "/view/index.html"); 
 });
 app.get("*", function(request, response) {
     response.send("404 error!");
