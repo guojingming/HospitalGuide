@@ -38,7 +38,7 @@ app.get('/', function(request, response) {
 app.get('/predict', function(request, response) {
     var params = request.query.symptoms;
     predicter.predictDisease(serverConnection, params, function(disease){
-        var str = "<p>疾病名称:" + disease.disease_name + "</p><p>疾病描述:" + disease.disease_description + "</p><p>传染性:" + disease.disease_infectious + "</p><p>挂号科室:" + disease.disease_department + "</p><p>治疗费用" + disease.disease_cost + "</p>";
+        var str = "<p>疾病名称:" + disease.disease_name + "</p><p>疾病描述:" + disease.disease_description + "</p><p>典型症状:" + disease.symptoms + "</p><p>传染性:" + disease.disease_infectious + "</p><p>挂号科室:" + disease.disease_department + "</p><p>治疗费用" + disease.disease_cost + "</p>";
         response.send(str);
     });
 });

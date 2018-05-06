@@ -23,6 +23,13 @@ exports.predictDisease = function(serverConnection, description, callback){
                 res[0]['disease_name'] = result;
                 callback(null, res[0]);
             });
+        },
+        function(disease, callback){
+            var name = disease['disease_name'];
+            serverConnection.query("select * from ori_data where disease_name = ?", [name], function(err, res){
+                disease['symptoms'] = res[0]['disease_symptoms'];
+                callback(null, disease);
+            });
         }
     ], function(err, res){
         callback(res);
