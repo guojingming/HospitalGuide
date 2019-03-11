@@ -2,7 +2,7 @@ var mysql = require('mysql');
 var synonyms = require("node-synonyms");
 
 var mysqlServerConfig = {
-    host:'45.78.41.228',
+    host:'104.224.142.49',
     user: 'root',
     password: '1234',
     database: 'medical',
@@ -39,10 +39,6 @@ serverConnection.connect(function(err) {
                     
             }
         }
-
-
-
         //create symptom -> disease map
-
     });
 }); 

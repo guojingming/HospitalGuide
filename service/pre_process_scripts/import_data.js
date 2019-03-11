@@ -1,7 +1,7 @@
 var XLSX = require('xlsx');
 var mysql = require('mysql');
 
-var workbook = XLSX.readFile('data.xlsx');
+var workbook = XLSX.readFile('service/resources/data.xlsx');
 
 // 获取 Excel 中所有表名
 var sheetNames = workbook.SheetNames; // 返回 ['sheet1', 'sheet2']
@@ -13,7 +13,7 @@ function replaceAll(str, find, replace) {
 }
 
 var mysqlServerConfig = {
-    host:'45.78.41.228',
+    host:'104.224.142.49',
     user: 'root',
     password: '1234',
     database: 'medical',
@@ -27,7 +27,7 @@ serverConnection.connect(function(err) {
         throw err;
     }
     console.log('Mysql connected as id ' + serverConnection.threadId);
-    for(var index = 2;index<7784;index++){
+    for(var index = 4087;index<7784;index++){
         var a = "";
         var b = "";
         var c = "";
@@ -154,7 +154,9 @@ serverConnection.connect(function(err) {
         } catch(e) {
             
         }
-        serverConnection.query("insert into data values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r], function(err, res){
+        serverConnection.query("insert into ori_data values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r], function(err, res){
+            console.log(a + " " + b + " " + c);
+            
             if(err != null){
                console.log(err);
             }
